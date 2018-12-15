@@ -154,7 +154,7 @@ export class FeMonitor{
         _.capturereportnum = _.capturereportnum <= 0 ? 1 : _.capturereportnum
         const tobeReport = _.capturedDoms.slice(0, _.capturereportnum) || []
         // 从cdn上动态插入
-        insertJs("//unpkg.com/html2canvas@1.0.0-alpha.12/dist/html2canvas.min.js").then((html2canvas) => {
+        if (window.html2canvas) {
             if (tobeReport.length && (html2canvas || window.html2canvas)) {
                 for (let dom of tobeReport) {
                     html2canvas(dom).then(canvas => {
@@ -164,9 +164,21 @@ export class FeMonitor{
                     });
                 }
             }
-        }).catch((error) => {
-            console.log(error)
-        })   
+        } else {
+            insertJs("//unpkg.com/html2canvas@1.0.0-alpha.12/dist/html2canvas.min.js").then((html2canvas) => {
+                if (tobeReport.length && (html2canvas || window.html2canvas)) {
+                    for (let dom of tobeReport) {
+                        html2canvas(dom).then(canvas => {
+                            var imageurl = canvas.toDataURL("image/png");
+                            console.log(imageurl)
+                            return imageurl
+                        });
+                    }
+                }
+            }).catch((error) => {
+                console.log(error)
+            }) 
+        }  
     }
     /**
      * 点击事件记录，用于错误时，录屏上报
