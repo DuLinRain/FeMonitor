@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FeMonitor上报</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../dist/femonitor.min.js"></script>
+</head>
+<body>
+    <script>
+    console.error('heheh')
+    console.log('heheh')
+    </script>
+    <button>点击测试按钮1</button>
+    <button>点击测试按钮2</button>
+    <button>点击测试按钮3</button>
+    <button>点击测试按钮4</button>
+    <button>点击测试按钮5</button>
+    <button>点击测试按钮6</button>
+    <button>点击测试按钮7</button>
+    <button>点击测试按钮8</button>
+    <button>点击测试按钮9</button>
+    <button>点击测试按钮10</button>
+    <button>点击测试按钮11</button>
+    <button id="test">点击测试按钮12</button>
+    <script>
+        document.querySelector('#test').onclick = function () {
+            throw new Error('test')
+        }
+        new FeMonitor.FeMonitor({
+            bossid: 1234, //暂时无效
+            consolelog: false, //是否上报console.log
+            consoleinfo: false, //是否上报console.info
+            consoleerror: true,  //是否上报console.error
+            error: true, //是否上报 error 事件
+            errormode: 2, //error 事件上报模式 1- window.oerror 2-addEventListener(error)
+            captureclick: true, //是否录屏
+            capturemode: 1, //录屏模式 1-最小区域(target) 2 - 整屏
+            capturereportnum: 1, //录屏上报个数(最多10个) 
+            unhandledrejection: true, //上报浏览器中未处理的Promise错误
+            performance: true, //性能上报
+            network: true //网络异常上报（error,load,abort,close,非200）
+        })
+    </script>
+</body>
+</html>

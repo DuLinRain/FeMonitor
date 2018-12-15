@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+assets/.svn
+# ide
+.idea
+*.zip
+# Mac General
+.DS_Store
+.AppleDouble
+.LSOverride
+TODO.md
+yarn-error.log
