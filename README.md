@@ -1,6 +1,16 @@
 # FeMonitor
 
-前端监控初版，包含按需录屏上报、error事件上报，console.log/info/error代理，unhandledrejection上报，接口(ajax, fetch)异常(error,abort,非200等)上报，性能(perfermence)上报
+前端监控初版，包含
+
+- 录屏(压缩后)上报
+- error事件上报
+- console.log/info/error上报
+- unhandledrejection上报
+- 接口(ajax, fetch)异常(error,abort,非200等)上报
+- 性能(perfermence)上报
+- 浏览器信息上报
+
+以上都是可选、可配置的
 
 ### FeMonotor使用方式
 
