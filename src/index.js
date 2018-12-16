@@ -32,9 +32,8 @@ function dom2img (doms = []) {
         for (let dom of doms) {
             html2canvas(dom).then(canvas => {
                 let imageurl = canvas.toDataURL("image/png");
-                let compressdurl = LZString.compress(imageurl) 
-                console.log(compressdurl)
-                return compressdurl
+                let compressedurl = LZString.compress(imageurl) 
+                console.log(compressedurl)
             });
         }
     } else {
@@ -42,9 +41,8 @@ function dom2img (doms = []) {
             for (let dom of doms) {
                 html2canvas(dom).then(canvas => {
                     let imageurl = canvas.toDataURL("image/png");
-                    let compressdurl = LZString.compress(imageurl)
-                    console.log(compressdurl)
-                    return compressdurl
+                    let compressedurl = LZString.compress(imageurl)
+                    console.log(compressedurl)
                 });
             }
         })
@@ -160,11 +158,10 @@ export class FeMonitor{
         } else {
             //不会被覆盖
             window.addEventListener('error', (e) => {
-                console.log(e)
                 let {message, filename, lineno, colno, error} = e
                 console.log(message, filename, lineno, colno, error)
                 _.reportCaptureImage()//上报捕获的图片
-            })
+            }, true)
         }
         
     }
@@ -182,7 +179,7 @@ export class FeMonitor{
         const tobeReport = _.capturedDoms.slice(0, _.capturereportnum) || []
         // 从cdn上动态插入
         if (window.html2canvas) {
-            if (tobeReport.length && (html2canvas || window.html2canvas)) {
+            if (tobeReport.length && window.html2canvas) {
                 dom2img(tobeReport)
             }
         } else {
@@ -211,9 +208,6 @@ export class FeMonitor{
             pathTemp.pop() //移除document
             if (_.capturedDoms.length >= 10) {
                 _.capturedDoms.pop();//抛出最后一个
-            }
-            if (_.capturemode === 1) {
-                let path = pathTemp[0]
             }
             //录屏模式 1- 最小 2- 全屏
             const path = _.capturemode === 1 ? pathTemp[0] : pathTemp[pathTemp.length - 1]
@@ -289,7 +283,6 @@ export class FeMonitor{
         });
     }
     initBrowserInfo () {
-        console.log(this.browser)
         if (!this.browser) {
             return
         }
