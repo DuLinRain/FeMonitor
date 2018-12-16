@@ -32,6 +32,7 @@
             capturereportnum: 1, //录屏上报个数(最多10个) 
             unhandledrejection: true, //上报浏览器中未处理的Promise错误
             performance: true, //性能上报
+            browser: true, //浏览器信息上报
             network: true //网络异常上报（error,load,abort,close,非200）
         })
     </script>
