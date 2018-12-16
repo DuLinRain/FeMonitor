@@ -63,7 +63,8 @@ export class FeMonitor{
             capturereportnum = 1, //截屏上报个数(最多10个)，
             unhandledrejection = true, //捕获浏览器中未处理的Promise错误
             network = true, //ajax fetch异常上报
-            performance = true //性能上报
+            performance = true, //性能上报
+            browser = true //浏览器信息上报
         } = props
         this.consolelog = consolelog
         this.consoleinfo = consoleinfo
@@ -76,6 +77,7 @@ export class FeMonitor{
         this.performance = performance
         this.unhandledrejection = unhandledrejection
         this.network = network
+        this.browser = browser
         this.start() 
     }
     start () {
@@ -85,6 +87,7 @@ export class FeMonitor{
         this.initUnhandledPromiseRejection() //捕获浏览器中未处理的Promise错误
         this.initNetWork() //ajax、fetch异常上报
         this.initPerference() //性能上报
+        this.initBrowserInfo() //浏览器信息上报
     }
     /**
      * 初始化console相关上报
@@ -183,15 +186,8 @@ export class FeMonitor{
                 dom2img(tobeReport)
             }
         } else {
-            insertJs("//unpkg.com/html2canvas@1.0.0-alpha.12/dist/html2canvas.min.js").then((html2canvas) => {
-                if (tobeReport.length && (html2canvas || window.html2canvas)) {
-                    // for (let dom of tobeReport) {
-                    //     html2canvas(dom).then(canvas => {
-                    //         var imageurl = canvas.toDataURL("image/png");
-                    //         console.log(imageurl)
-                    //         return imageurl
-                    //     });
-                    // }
+            insertJs("//unpkg.com/html2canvas@1.0.0-alpha.12/dist/html2canvas.min.js").then(() => {
+                if (tobeReport.length && window.html2canvas) {
                     dom2img(tobeReport)
                 }
             }).catch((error) => {
@@ -291,6 +287,23 @@ export class FeMonitor{
         this.performance && window.performance && window.performance.getEntries() && window.performance.getEntries().forEach(function (perf) {
             console.log(JSON.stringify(perf))
         });
+    }
+    initBrowserInfo () {
+        console.log(this.browser)
+        if (!this.browser) {
+            return
+        }
+        if (window.bowser && window.bowser.getParser) {
+            const browser = bowser.getParser(window.navigator.userAgent);
+            console.log(browser.parse())
+        } else {
+            insertJs("//unpkg.com/bowser@2.0.0-beta.3/bundled.js").then(() => {
+                const browser = bowser.getParser(window.navigator.userAgent);
+                console.log(browser.parse())
+            }).catch((error) => {
+                console.log(error)
+            }) 
+        }
     }
 }
  
