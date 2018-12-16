@@ -11,7 +11,7 @@ function insertJs (url = '') {
         script.src = url;
         document.querySelector('head').appendChild(script);
         script.onload=function(){
-            resolve(window.html2canvas)
+            resolve()
         }
         script.onerror=function(){
             reject('js加载失败')
@@ -25,6 +25,30 @@ function reportImage (url) {
         image.src= url
         image.onload = () => {}
     })(url)
+}
+function dom2img (doms = []) {
+    //压缩图片地址
+    if (window.LZString && LZString.compress) {
+        for (let dom of doms) {
+            html2canvas(dom).then(canvas => {
+                let imageurl = canvas.toDataURL("image/png");
+                let compressdurl = LZString.compress(imageurl) 
+                console.log(compressdurl)
+                return compressdurl
+            });
+        }
+    } else {
+        insertJs('//unpkg.com/lz-string@1.4.4/libs/lz-string.js').then(() => {
+            for (let dom of doms) {
+                html2canvas(dom).then(canvas => {
+                    let imageurl = canvas.toDataURL("image/png");
+                    let compressdurl = LZString.compress(imageurl)
+                    console.log(compressdurl)
+                    return compressdurl
+                });
+            }
+        })
+    }
 }
 export class FeMonitor{
     constructor (props = {}) {
@@ -156,24 +180,19 @@ export class FeMonitor{
         // 从cdn上动态插入
         if (window.html2canvas) {
             if (tobeReport.length && (html2canvas || window.html2canvas)) {
-                for (let dom of tobeReport) {
-                    html2canvas(dom).then(canvas => {
-                        var imageurl = canvas.toDataURL("image/png");
-                        console.log(imageurl)
-                        return imageurl
-                    });
-                }
+                dom2img(tobeReport)
             }
         } else {
             insertJs("//unpkg.com/html2canvas@1.0.0-alpha.12/dist/html2canvas.min.js").then((html2canvas) => {
                 if (tobeReport.length && (html2canvas || window.html2canvas)) {
-                    for (let dom of tobeReport) {
-                        html2canvas(dom).then(canvas => {
-                            var imageurl = canvas.toDataURL("image/png");
-                            console.log(imageurl)
-                            return imageurl
-                        });
-                    }
+                    // for (let dom of tobeReport) {
+                    //     html2canvas(dom).then(canvas => {
+                    //         var imageurl = canvas.toDataURL("image/png");
+                    //         console.log(imageurl)
+                    //         return imageurl
+                    //     });
+                    // }
+                    dom2img(tobeReport)
                 }
             }).catch((error) => {
                 console.log(error)
