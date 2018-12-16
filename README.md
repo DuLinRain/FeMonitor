@@ -9,6 +9,7 @@
 - 接口(ajax, fetch)异常(error,abort,非200等)上报
 - 性能(perfermence)上报
 - 浏览器信息上报
+- 上报采用Image发请求
 
 以上都是可选、可配置的
 
